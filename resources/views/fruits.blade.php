@@ -3,58 +3,64 @@
 @section('title', 'Fruits')
 
 @section('content')
-<main class="max-w-7xl mx-auto px-4 py-10">
-    <h1 class="text-2xl font-bold mb-6">Fruits</h1>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6"> Fresh Fruits</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @forelse($products as $product)
-            <div class="bg-white shadow rounded-lg p-4 hover:shadow-lg transition-shadow duration-300 relative">
+    @if ($products->isEmpty())
+        <p class="text-gray-600">No fruits available at the moment.</p>
+    @else
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            @foreach ($products as $product)
+                <div class="bg-white shadow rounded-lg overflow-hidden relative">
+                    <a href="{{ route('products.show', $product->id) }}">
+                        @if ($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                 class="w-full h-48 object-cover">
+                        @endif
+                    </a>
 
-                @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}"
-                         alt="{{ $product->name }}"
-                         class="w-full h-48 object-cover rounded mb-3">
-                @endif
+                    <div class="p-4">
+                        <h2 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h2>
 
-                <h2 class="text-lg font-semibold mb-1">{{ $product->name }}</h2>
+                        @if ($product->on_sale)
+                            <p class="text-green-600 font-bold mt-2">
+                                LKR {{ number_format($product->sale_price, 2) }}
+                                <span class="line-through text-gray-400 text-sm ml-2">
+                                    LKR {{ number_format($product->price, 2) }}
+                                </span>
+                            </p>
+                        @else
+                            <p class="text-gray-700 font-medium mt-2">
+                                LKR {{ number_format($product->price, 2) }}
+                            </p>
+                        @endif
 
-                @if($product->on_sale)
-                    <p class="text-red-600 font-bold">
-                        Sale: LKR {{ number_format($product->sale_price, 2) }}
-                    </p>
-                    <p class="text-gray-500 line-through">
-                        LKR {{ number_format($product->price, 2) }}
-                    </p>
-                @else
-                    <p class="text-gray-800">
-                        LKR {{ number_format($product->price, 2) }}
-                    </p>
-                @endif
+                        <p class="text-xs mt-2 {{ $product->in_stock ? 'text-green-600' : 'text-red-500' }}">
+                            {{ $product->in_stock ? 'In Stock' : 'Out of Stock' }}
+                        </p>
 
-                <p class="text-sm text-gray-500 mt-1">
-                    {{ $product->in_stock ? 'In Stock' : 'Out of Stock' }}
-                </p>
+                        @auth
+                            <button onclick="openPopup({{ $product->id }})"
+                                    class="w-full bg-green-600 text-white px-4 py-2 text-sm rounded hover:bg-green-700 transition mt-4">
+                                Add to Cart
+                            </button>
+                        @else
+                            <button onclick="alert('Please log in to continue shopping.')"
+                                    class="w-full bg-green-600 text-white px-4 py-2 text-sm rounded hover:bg-green-700 transition mt-4">
+                                Add to Cart
+                            </button>
+                        @endauth
 
-                {{-- ✅ Show popup if logged in, alert if not --}}
-                @auth
-                    <button onclick="openPopup({{ $product->id }})"
-                            class="w-full bg-green-600 text-white py-2 mt-4 rounded hover:bg-green-700 transition">
-                        Add to Cart
-                    </button>
-                @else
-                    <button onclick="alert('Please log in to continue shopping.')"
-                            class="w-full bg-green-600 text-white py-2 mt-4 rounded hover:bg-green-700 transition">
-                        Add to Cart
-                    </button>
-                @endauth
-            </div>
-        @empty
-            <p>No products found in this category.</p>
-        @endforelse
-    </div>
+                        <a href="{{ route('products.show', $product->id) }}"
+                           class="inline-block mt-2 text-sm text-blue-600 hover:underline">View</a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 </main>
 
-{{-- Global Popup --}}
+{{-- 🔄 Shared Modal --}}
 @auth
 <div id="add-to-cart-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-lg p-6 w-80">
@@ -104,4 +110,3 @@
     }
 </script>
 @endsection
-

@@ -10,7 +10,6 @@ use App\Models\Product;
 // 🏠 Public Pages
 Route::view('/', 'index');
 Route::view('/checkout', 'checkout')->name('checkout');
-Route::view('/order-confirmation', 'order_confirmation')->name('order.confirmation');
 Route::view('/search', 'search')->name('search');
 
 // 🛒 Cart
@@ -24,10 +23,10 @@ Route::get('/clear-cart', function () {
     return redirect('/cart')->with('success', 'Cart cleared!');
 });
 
-// ✅ Product Pages by Category
+// ✅ Product Pages by Category and Detail
 Route::get('/vegetables', [ProductController::class, 'showByCategory'])->defaults('categoryName', 'Vegetables');
 Route::get('/fruits', [ProductController::class, 'showByCategory'])->defaults('categoryName', 'Fruits');
-Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
 // 🎉 Offers Page - Show products that are on sale
 Route::get('/offers', function () {
@@ -48,6 +47,7 @@ Route::middleware([
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
     Route::get('/account', [OrderController::class, 'accountPage'])->name('account');
     Route::post('/place-order', [OrderController::class, 'placeOrder'])->name('place.order');
+    Route::get('/order-confirmation', [OrderController::class, 'orderConfirmation'])->name('order.confirmation');
 });
 
 // 🔐 Admin Auth Routes (custom session-based)
@@ -85,4 +85,3 @@ Route::middleware('admin.auth')->prefix('admin')->group(function () {
     Route::post('/orders/update-status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.update');
     Route::put('/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.updateOrderStatus');
 });
-Route::get('/order-confirmation', [OrderController::class, 'orderConfirmation'])->name('order.confirmation');

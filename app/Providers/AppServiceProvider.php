@@ -3,13 +3,14 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
+use App\Http\Livewire\ProductSearch;
+use App\Http\Livewire\CartIcon;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -18,11 +19,11 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot()
     {
-        //
+        // Manually register Livewire components
+        Livewire::component('product-search', ProductSearch::class);
+        Livewire::component('cart-icon', CartIcon::class);
     }
 }

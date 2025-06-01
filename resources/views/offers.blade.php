@@ -4,7 +4,7 @@
 
 @section('content')
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">🎉 Special Offers</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-6"> Special Offers</h1>
 
     @if ($offers->isEmpty())
         <p class="text-gray-600">No special offers available at the moment.</p>
@@ -12,18 +12,26 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             @foreach ($offers as $product)
                 <div class="bg-white shadow rounded-lg overflow-hidden relative">
-                    @if ($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                             class="w-full h-48 object-cover">
-                    @endif
+                    <a href="{{ route('products.show', $product->id) }}">
+                        @if ($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                 class="w-full h-48 object-cover">
+                        @endif
+                    </a>
+
                     <div class="p-4">
                         <h2 class="text-lg font-semibold text-gray-800">{{ $product->name }}</h2>
                         <p class="text-sm text-gray-500">{{ $product->category->name ?? '' }}</p>
+
                         <p class="text-green-600 font-bold mt-2">
                             LKR {{ number_format($product->sale_price, 2) }}
                             <span class="line-through text-gray-400 text-sm ml-2">
                                 LKR {{ number_format($product->price, 2) }}
                             </span>
+                        </p>
+
+                        <p class="text-xs mt-2 {{ $product->in_stock ? 'text-green-600' : 'text-red-500' }}">
+                            {{ $product->in_stock ? 'In Stock' : 'Out of Stock' }}
                         </p>
 
                         @auth
@@ -38,7 +46,7 @@
                             </button>
                         @endauth
 
-                        <a href="{{ route('product.show', $product->id) }}"
+                        <a href="{{ route('products.show', $product->id) }}"
                            class="inline-block mt-2 text-sm text-blue-600 hover:underline">View</a>
                     </div>
                 </div>

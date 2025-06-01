@@ -6,12 +6,11 @@ use Livewire\Component;
 
 class CartIcon extends Component
 {
-    public $count;
+    public $cartCount = 0;
 
     public function mount()
     {
-        $cart = session()->get('cart', []);
-        $this->count = count($cart);
+        $this->cartCount = session()->has('cart') ? count(session('cart')) : 0;
     }
 
     public function render()
