@@ -19,11 +19,12 @@ class Order extends Model
         'city',
         'postal_code',
         'total',
-        'status'
+        'status',
+        'email', // ✅ optional but useful for both backend & API
     ];
 
     /**
-     * The user who placed the order.
+     * 🔗 The user who placed the order.
      */
     public function user()
     {
@@ -31,9 +32,10 @@ class Order extends Model
     }
 
     /**
-     * The items within this order.
+     * 📦 The items within this order.
+     * This replaces `orderItems()` to simply `items()` for better API/Flutter integration.
      */
-    public function orderItems()
+    public function items()
     {
         return $this->hasMany(OrderItem::class);
     }

@@ -28,6 +28,7 @@
                         <p>{{ $order->address }}</p>
                         <p>{{ $order->city }}, {{ $order->postal_code }}</p>
                         <p>{{ $order->phone }}</p>
+                        <p>{{ $order->email }}</p>
                     </div>
                 </div>
                 <div>
@@ -35,6 +36,7 @@
                     <div class="mt-2 text-sm text-gray-900 space-y-1">
                         <p>Total Amount: LKR {{ number_format($order->total, 2) }}</p>
                         <p>Order Date: {{ $order->created_at->format('F j, Y') }}</p>
+                        <p>Status: {{ $order->status }}</p>
                     </div>
                 </div>
             </div>
@@ -44,21 +46,25 @@
         <div class="p-6">
             <h2 class="text-xl font-semibold mb-4">Ordered Items</h2>
             <div class="space-y-4">
-                @foreach($order->orderItems as $item)
-                    <div class="flex items-center justify-between py-4 border-b last:border-0">
-                        <div>
-                            <h3 class="text-sm font-medium">
-                                {{ $item->product->name ?? 'Deleted Product' }}
-                            </h3>
-                            <p class="text-sm text-gray-500">
-                                Quantity: {{ $item->quantity }} {{ $item->unit }}
+                @if($order->items && count($order->items) > 0)
+                    @foreach($order->items as $item)
+                        <div class="flex items-center justify-between py-4 border-b last:border-0">
+                            <div>
+                                <h3 class="text-sm font-medium">
+                                    {{ $item->product->name ?? 'Deleted Product' }}
+                                </h3>
+                                <p class="text-sm text-gray-500">
+                                    Quantity: {{ $item->quantity }} {{ $item->unit }}
+                                </p>
+                            </div>
+                            <p class="text-sm font-medium">
+                                LKR {{ number_format($item->price * $item->quantity, 2) }}
                             </p>
                         </div>
-                        <p class="text-sm font-medium">
-                            LKR {{ number_format($item->price * $item->quantity, 2) }}
-                        </p>
-                    </div>
-                @endforeach
+                    @endforeach
+                @else
+                    <p class="text-gray-500">No items found for this order.</p>
+                @endif
             </div>
         </div>
     </div>

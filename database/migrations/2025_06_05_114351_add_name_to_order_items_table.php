@@ -8,25 +8,22 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
-    {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->string('unit')->default('kg'); // ✅ Adds the 'unit' column
-        });
-    }
+{
+    Schema::table('order_items', function (Blueprint $table) {
+        $table->string('name')->after('product_id');
+    });
+}
+
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('order_items', function (Blueprint $table) {
-            $table->dropColumn('unit'); // ✅ Removes the 'unit' column
+            //
         });
     }
 };

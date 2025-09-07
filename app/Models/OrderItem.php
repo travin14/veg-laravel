@@ -4,21 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Order;
+use App\Models\Product;
 
 class OrderItem extends Model
 {
     use HasFactory;
 
+    // ✅ Fillable attributes for mass assignment
     protected $fillable = [
         'order_id',
         'product_id',
-        'name',
+        'name',       // Snapshot of product name at time of ordering
         'quantity',
         'price',
+        'unit',       // Optional: units like 'kg', 'g', 'pcs'
     ];
 
     /**
-     * Get the order this item belongs to.
+     * 🔗 The order this item belongs to.
      */
     public function order()
     {
@@ -26,7 +30,7 @@ class OrderItem extends Model
     }
 
     /**
-     * Get the product associated with this item.
+     * 🥬 The product associated with this order item.
      */
     public function product()
     {

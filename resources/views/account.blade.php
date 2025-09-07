@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach ($orders as $order)
+                    @forelse ($orders as $order)
                         <tr>
                             <td class="px-6 py-4">#{{ $order->id }}</td>
                             <td class="px-6 py-4">{{ $order->created_at->format('F j, Y') }}</td>
@@ -57,7 +57,7 @@
                                     {{ $order->status }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">{{ $order->orderItems->count() }} item(s)</td>
+                            <td class="px-6 py-4">{{ $order->items->count() }} item(s)</td>
                             <td class="px-6 py-4">LKR {{ number_format($order->total, 2) }}</td>
                             <td class="px-6 py-4">
                                 <button 
@@ -83,23 +83,23 @@
 
                                 <h3 class="text-md font-semibold mt-4 mb-2">Items</h3>
                                 <ul class="text-sm text-gray-700 space-y-2 max-h-40 overflow-y-auto">
-                                    @foreach ($order->orderItems as $item)
+                                    @forelse ($order->items as $item)
                                         <li class="border-b pb-1">
                                             {{ $item->product->name ?? 'Deleted Product' }} - 
-                                            {{ $item->quantity }} {{ $item->unit }} 
+                                            {{ $item->quantity }} {{ $item->unit ?? '' }} 
                                             @ LKR {{ number_format($item->price, 2) }}
                                         </li>
-                                    @endforeach
+                                    @empty
+                                        <li>No item details found.</li>
+                                    @endforelse
                                 </ul>
                             </div>
                         </div>
-                    @endforeach
-
-                    @if ($orders->isEmpty())
+                    @empty
                         <tr>
                             <td colspan="6" class="text-center py-6 text-gray-500">No orders found.</td>
                         </tr>
-                    @endif
+                    @endforelse
                 </tbody>
             </table>
         </div>
